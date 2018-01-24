@@ -1,5 +1,7 @@
 package org.praveen.tree;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class BinaryTreeTraversals {
@@ -103,6 +105,25 @@ public class BinaryTreeTraversals {
             BinaryTreeNode tmp = st2.pop();
             System.out.println(tmp.getData());
         }
+    }
+
+    public void levelOrderTraversal(BinaryTreeNode binaryTreeNode) {
+
+        Queue<BinaryTreeNode> queue = new LinkedList<>();
+        queue.offer(binaryTreeNode);
+        while (!queue.isEmpty()) {
+            BinaryTreeNode node = queue.poll();
+            if (node != null) {
+                System.out.println(node.getData());
+                if (node.getLeft() != null) {
+                    queue.offer(node.getLeft());
+                }
+                if (node.getRight() != null) {
+                    queue.offer(node.getRight());
+                }
+            }
+        }
+
     }
 
     public static void main(String[] args) {
