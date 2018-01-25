@@ -107,6 +107,18 @@ public class BinaryTreeTraversals {
         }
     }
 
+    public int heightOfBinaryTree(BinaryTreeNode binaryTreeNode) {
+
+        if (binaryTreeNode == null) {
+            return 0;
+        }
+        int heightOfLeftTree = 1 + heightOfBinaryTree(binaryTreeNode.getLeft());
+        int heightOfRightTree = 1 + heightOfBinaryTree(binaryTreeNode.getRight());
+        return heightOfLeftTree > heightOfRightTree ? heightOfLeftTree : heightOfRightTree;
+    }
+
+
+    //put all the elements in queue level wise.
     public void levelOrderTraversal(BinaryTreeNode binaryTreeNode) {
 
         Queue<BinaryTreeNode> queue = new LinkedList<>();
@@ -123,7 +135,6 @@ public class BinaryTreeTraversals {
                 }
             }
         }
-
     }
 
     public static void main(String[] args) {
@@ -141,6 +152,11 @@ public class BinaryTreeTraversals {
         binaryTreeTraversals.postOrderTraversalRecursive(root);
         System.out.println("-------------------");
         binaryTreeTraversals.postOrderTraversalNonRecursive(root);
+        System.out.println("-------------------");
+        System.out.println("Height -> " + binaryTreeTraversals.heightOfBinaryTree(root));
+        System.out.println("-------------------");
+        binaryTreeTraversals.levelOrderTraversal(root);
+
     }
 
 }

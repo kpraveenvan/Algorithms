@@ -22,6 +22,7 @@ public class BinaryTreeBuilder {
         n4.setLeft(n7);
         n5.setLeft(n8);
         n6.setRight(n9);
+        n9.setLeft(new BinaryTreeNode(9));
 
         return n1;
     }
