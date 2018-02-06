@@ -5,13 +5,12 @@ import java.util.Queue;
 
 public class SizeOfBinaryTree {
 
+    static int size = 0;
     public int sizeOfBTreeRecursive(BinaryTreeNode binaryTreeNode) {
         if (binaryTreeNode == null) {
-            return 0;
+            return size;
         }
-        int sizeOfLeftTree = binaryTreeNode.getLeft() == null ? 0 : sizeOfBTreeRecursive(binaryTreeNode.getLeft());
-        int sizeOfRighTree = binaryTreeNode.getRight() == null ? 0 : sizeOfBTreeRecursive(binaryTreeNode.getRight());
-        return 1 + sizeOfLeftTree + sizeOfRighTree;
+        return 1 + sizeOfBTreeRecursive(binaryTreeNode.getLeft()) + sizeOfBTreeRecursive(binaryTreeNode.getRight());
     }
 
     public int sizeOfBTreeNonRecursive(BinaryTreeNode binaryTreeNode) {
@@ -35,6 +34,7 @@ public class SizeOfBinaryTree {
     }
 
     public static void main(String[] args) {
+
         BinaryTreeNode treeNode = BinaryTreeBuilder.constructSampleBinaryTree();
         SizeOfBinaryTree sizeOfBinaryTree = new SizeOfBinaryTree();
         System.out.println(sizeOfBinaryTree.sizeOfBTreeRecursive(treeNode));

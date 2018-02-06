@@ -32,7 +32,7 @@ public class HeightOfBinaryTree {
             BinaryTreeNode tmp = queue.poll();
             if (tmp != null) { //if element is null then we reached end of a level.
                 if (tmp.getLeft() == null && tmp.getRight() == null) {
-                    queue.poll(); //Just Remove that element.
+                    queue.poll(); //Remove the null as there is no more levels
                 }
                 if (tmp.getLeft() != null) {
                     queue.offer(tmp.getLeft());

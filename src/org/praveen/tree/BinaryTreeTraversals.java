@@ -7,22 +7,22 @@ import java.util.Stack;
 public class BinaryTreeTraversals {
 
     //Pre Order Traversals.
-    public void preOrderTraversalRecursion(BinaryTreeNode binaryTreeNode) {
+    public static void preOrderTraversalRecursion(BinaryTreeNode binaryTreeNode) {
 
         if (binaryTreeNode != null) {
-            System.out.println(binaryTreeNode.getData());
+            System.out.print(" " + binaryTreeNode.getData());
             preOrderTraversalRecursion(binaryTreeNode.getLeft());
             preOrderTraversalRecursion(binaryTreeNode.getRight());
         }
     }
 
-    public void preOrderTraversalNonRecursion(BinaryTreeNode binaryTreeNode) {
+    public static void preOrderTraversalNonRecursion(BinaryTreeNode binaryTreeNode) {
 
         Stack<BinaryTreeNode> st = new Stack();
         st.push(binaryTreeNode);
         while (!st.empty()) {
             binaryTreeNode = st.pop();
-            System.out.println(binaryTreeNode.getData());
+            System.out.print(" " + binaryTreeNode.getData());
             //Since its a stack the order is importent
             if (binaryTreeNode.getRight() != null) {
                 st.push(binaryTreeNode.getRight());
@@ -34,16 +34,16 @@ public class BinaryTreeTraversals {
     }
 
     //InOrder Traversal
-    public void inOrderTraversalRecursion(BinaryTreeNode binaryTreeNode) {
+    public static void inOrderTraversalRecursion(BinaryTreeNode binaryTreeNode) {
 
         if (binaryTreeNode != null) {
             inOrderTraversalRecursion(binaryTreeNode.getLeft());
-            System.out.println(binaryTreeNode.getData());
+            System.out.print(" " + binaryTreeNode.getData());
             inOrderTraversalRecursion(binaryTreeNode.getRight());
         }
     }
 
-    public void inOrderTraversalNonRecursion(BinaryTreeNode binaryTreeNode) {
+    public static void inOrderTraversalNonRecursion(BinaryTreeNode binaryTreeNode) {
 
         Stack<BinaryTreeNode> st = new Stack<>();
 
@@ -55,7 +55,7 @@ public class BinaryTreeTraversals {
 
         while (!st.isEmpty()) {
             binaryTreeNode = st.pop();
-            System.out.println(binaryTreeNode.getData());
+            System.out.print(" " + binaryTreeNode.getData());
 
             //Get the Right Node
             if (binaryTreeNode.getRight() != null) {
@@ -71,17 +71,17 @@ public class BinaryTreeTraversals {
     }
 
     //Post Order Traversal
-    public void postOrderTraversalRecursive(BinaryTreeNode binaryTreeNode) {
+    public static void postOrderTraversalRecursive(BinaryTreeNode binaryTreeNode) {
 
         if (binaryTreeNode != null) {
             postOrderTraversalRecursive(binaryTreeNode.getLeft());
             postOrderTraversalRecursive(binaryTreeNode.getRight());
-            System.out.println(binaryTreeNode.getData());
+            System.out.print(" " + binaryTreeNode.getData());
         }
     }
 
     //Funda is root is the last element in the list.
-    public void postOrderTraversalNonRecursive(BinaryTreeNode binaryTreeNode) {
+    public static void postOrderTraversalNonRecursive(BinaryTreeNode binaryTreeNode) {
 
         Stack<BinaryTreeNode> st1 = new Stack<>();
         Stack<BinaryTreeNode> st2 = new Stack<>();
@@ -103,11 +103,11 @@ public class BinaryTreeTraversals {
         //stack2 has the elements in PostOrder traversal in reverse order.
         while (!st2.isEmpty()) {
             BinaryTreeNode tmp = st2.pop();
-            System.out.println(tmp.getData());
+            System.out.print(" " + tmp.getData());
         }
     }
 
-    public int heightOfBinaryTree(BinaryTreeNode binaryTreeNode) {
+    public static int heightOfBinaryTree(BinaryTreeNode binaryTreeNode) {
 
         if (binaryTreeNode == null) {
             return 0;
@@ -119,14 +119,14 @@ public class BinaryTreeTraversals {
 
 
     //put all the elements in queue level wise.
-    public void levelOrderTraversal(BinaryTreeNode binaryTreeNode) {
+    public static void levelOrderTraversal(BinaryTreeNode binaryTreeNode) {
 
         Queue<BinaryTreeNode> queue = new LinkedList<>();
         queue.offer(binaryTreeNode);
         while (!queue.isEmpty()) {
             BinaryTreeNode node = queue.poll();
             if (node != null) {
-                System.out.println(node.getData());
+                System.out.print(" " + node.getData());
                 if (node.getLeft() != null) {
                     queue.offer(node.getLeft());
                 }
@@ -137,25 +137,57 @@ public class BinaryTreeTraversals {
         }
     }
 
+    public static void PostOrderSingleStack(BinaryTreeNode binaryTreeNode) {
+
+        BinaryTreeNode current = binaryTreeNode; // Initialize to the root
+        Stack<BinaryTreeNode> stack = new Stack<>();
+
+        while (current != null || !stack.isEmpty()) {
+
+            if (current != null) {
+                stack.push(current);
+                current = current.getLeft();
+            } else {
+                if (!stack.isEmpty()) {
+                    BinaryTreeNode tmp = stack.peek();
+                    if (tmp.getRight() == null) {
+
+                        tmp = stack.pop(); //We actually pop from the stack if there is no right child.
+                        System.out.print(" " + tmp.getData());
+
+                        // check if the element which is poped is the right child of the top of the stack
+                        if (tmp == stack.peek().getRight()) {
+                            //This means we are done visiting the right tree of the top of the stack
+                            tmp = stack.pop(); // this means pop again
+                            System.out.print(" " + tmp.getData());
+                        }
+                    } else {
+                        current = tmp.getRight(); //If top of the stack has a right child
+                    }
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
         BinaryTreeNode root = BinaryTreeBuilder.constructSampleBinaryTree();
-        BinaryTreeTraversals binaryTreeTraversals = new BinaryTreeTraversals();
-        binaryTreeTraversals.preOrderTraversalRecursion(root);
-        System.out.println("-------------------");
-        binaryTreeTraversals.preOrderTraversalNonRecursion(root);
-        System.out.println("-------------------");
-        binaryTreeTraversals.inOrderTraversalRecursion(root);
-        System.out.println("-------------------");
-        binaryTreeTraversals.inOrderTraversalNonRecursion(root);
-        System.out.println("-------------------");
-        binaryTreeTraversals.postOrderTraversalRecursive(root);
-        System.out.println("-------------------");
-        binaryTreeTraversals.postOrderTraversalNonRecursive(root);
-        System.out.println("-------------------");
-        System.out.println("Height -> " + binaryTreeTraversals.heightOfBinaryTree(root));
-        System.out.println("-------------------");
-        binaryTreeTraversals.levelOrderTraversal(root);
+        BinaryTreeTraversals.preOrderTraversalRecursion(root);
+        System.out.println("");
+        BinaryTreeTraversals.preOrderTraversalNonRecursion(root);
+        System.out.println("");
+        BinaryTreeTraversals.inOrderTraversalRecursion(root);
+        System.out.println("");
+        BinaryTreeTraversals.inOrderTraversalNonRecursion(root);
+        System.out.println("");
+        BinaryTreeTraversals.postOrderTraversalRecursive(root);
+        System.out.println("");
+        BinaryTreeTraversals.postOrderTraversalNonRecursive(root);
+        System.out.println("");
+        BinaryTreeTraversals.PostOrderSingleStack(root);
+        System.out.println("");
+        System.out.println("Height -> " + BinaryTreeTraversals.heightOfBinaryTree(root));
+        BinaryTreeTraversals.levelOrderTraversal(root);
 
     }
 

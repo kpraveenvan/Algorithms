@@ -8,17 +8,14 @@ public class MaximumElementBTree {
     int maxValue = Integer.MIN_VALUE;
 
     public int getMaxElementInBTreeRecursion(BinaryTreeNode binaryTreeNode) {
-        if (binaryTreeNode != null) {
-            int maxElementInLeft = getMaxElementInBTreeRecursion(binaryTreeNode.getLeft());
-            int maxElementInRight = getMaxElementInBTreeRecursion(binaryTreeNode.getRight());
 
-            maxValue = maxElementInLeft > maxElementInRight ? maxElementInLeft : maxElementInRight; //Get Max values of current iteration
-
-            if (binaryTreeNode.getData() > maxValue) { //Compare the value of the max till current iteration with the current element.
-                maxValue = binaryTreeNode.getData();
-            }
+        if (binaryTreeNode == null) {
+            return maxValue;
         }
-        return maxValue;
+        if (binaryTreeNode.getData() > maxValue) {
+            maxValue = binaryTreeNode.getData();
+        }
+        return Math.max(getMaxElementInBTreeRecursion(binaryTreeNode.getLeft()), getMaxElementInBTreeRecursion(binaryTreeNode.getRight()));
     }
 
     //Use level Order Traversal
