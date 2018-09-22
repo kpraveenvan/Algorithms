@@ -37,7 +37,7 @@ public class TopologicalSortUsingStack {
 
         visited[node] = true;
 
-        for (int i : adjListArray[node]) { //if it has any adjacency node and if those are not visited push it to stack.
+        for (int i : adjListArray[node]) { //if it has any adjacency node and if those are not visited Then start topological sort from that vertex.
             if (!visited[i]) {
                 topologicalSortUtil(i);
             }
