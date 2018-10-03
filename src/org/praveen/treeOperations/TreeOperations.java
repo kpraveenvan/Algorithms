@@ -29,6 +29,19 @@ public class TreeOperations {
     //Height of BTree - Recursive
     //Height of BTree - Iterative
     //Minimum Height of BTree
+    //Deepest Node of BTree
+    //Deleting a Node in BTree - BST
+    //Number of leaf nodes in BTree
+    //Number of full nodes in BTree
+    //Number of half nodes in BTree
+    //** Two Trees Structurally Identical - Recursive
+    //Two Trees Structurally Identical - Iterative
+    //Maximum width - Btree
+    //** Diameter of BTree
+    //Level with maximum Sum
+    //*** Print root to leaf paths
+    //*** Existence of path from root to any node
+
 
     public static void preOrderRecursive(BTree bTree) {
 
@@ -364,20 +377,6 @@ public class TreeOperations {
         }
     }
 
-    //Height of BTree - Recursive
-    public static int heightOfBTreeRecursive(BTree bTree) {
-
-        int height = 0;
-        if (bTree != null) {
-
-            int heightLeft = heightOfBTreeRecursive(bTree.getLeft());
-            int heightRight = heightOfBTreeRecursive(bTree.getRight());
-            height = heightLeft > heightRight ? heightLeft + 1 : heightRight + 1;
-        }
-        return height;
-
-    }
-
     //Height of BTree - Iterative - End of a level insert an null and while iterating check for null (if null add 1 to height)
     public static int heightOfBTreeIterative(BTree bTree) {
 
@@ -430,6 +429,283 @@ public class TreeOperations {
             }
         }
         return height;
+    }
+
+    //Deepest Node of BTree - Last Node in Level Order Traversal
+    public static BTree deepestNodeOfbTree(BTree bTree) {
+
+        Queue<BTree> bTreeQueue = new LinkedList<>();
+        bTreeQueue.offer(bTree);
+        BTree deepestNode = null;
+        while (!bTreeQueue.isEmpty()) {
+
+            deepestNode = bTreeQueue.poll();
+            if (deepestNode.getLeft() != null) {
+                bTreeQueue.offer(deepestNode.getLeft());
+            }
+            if (deepestNode.getRight() != null) {
+                bTreeQueue.offer(deepestNode.getRight());
+            }
+        }
+        return deepestNode;
+    }
+
+    //Number of leaf nodes in BTree
+    public static int numberOfLeafNodes(BTree bTree) {
+
+        int numberOfleafNodes = 0;
+        Queue<BTree> bTreeQueue = new LinkedList<>();
+        bTreeQueue.offer(bTree);
+
+        while (!bTreeQueue.isEmpty()) {
+
+            BTree node = bTreeQueue.poll();
+            if (node.getLeft() != null) {
+                bTreeQueue.offer(node.getLeft());
+            }
+            if (node.getRight() != null) {
+                bTreeQueue.offer(node.getRight());
+            }
+
+            if (node.getLeft() == null && node.getRight() == null) {
+                numberOfleafNodes++;
+            }
+        }
+        return numberOfleafNodes;
+    }
+
+    //Number of full nodes in BTree
+    public static int numberOfFullNodesInBTree(BTree bTree) {
+
+        int numberOfFullNodes = 0;
+        Queue<BTree> bTreeQueue = new LinkedList<>();
+        bTreeQueue.offer(bTree);
+        while (!bTreeQueue.isEmpty()) {
+
+            BTree node = bTreeQueue.poll();
+            if (node.getLeft() != null) {
+                bTreeQueue.offer(node.getLeft());
+            }
+            if (node.getRight() != null) {
+                bTreeQueue.offer(node.getRight());
+            }
+            if (node.getLeft() != null && node.getRight() != null) {
+                numberOfFullNodes++;
+            }
+        }
+        return numberOfFullNodes;
+    }
+
+    //Number of half nodes in BTree
+    public static int numberOfHalfNodesInBTree(BTree bTree) {
+
+        int numberOfHalfNodes = 0;
+        Queue<BTree> bTreeQueue = new LinkedList<>();
+        bTreeQueue.offer(bTree);
+
+        while (!bTreeQueue.isEmpty()) {
+
+            BTree node = bTreeQueue.poll();
+            if (node.getLeft() != null) {
+                bTreeQueue.offer(node.getLeft());
+                if (node.getRight() == null) {
+                    numberOfHalfNodes++;
+                }
+            }
+            if (node.getRight() != null) {
+                bTreeQueue.offer(node.getRight());
+                if (node.getLeft() == null) {
+                    numberOfHalfNodes++;
+                }
+            }
+        }
+        return numberOfHalfNodes;
+    }
+
+    //Two Trees Structurally Identical
+    public static boolean isStructurallyIdenticalRecursive(BTree bTree1, BTree bTree2) {
+
+        if (bTree1 == null && bTree2 == null) { //Both null - return true
+            return true;
+        } else if (bTree1 != null && bTree2 != null) { //If both Not null - check its left and right tree subtrees
+            return isStructurallyIdenticalRecursive(bTree1.getLeft(), bTree2.getLeft()) && isStructurallyIdenticalRecursive(bTree1.getRight(), bTree2.getRight());
+        } else {
+            return false;
+        }
+    }
+
+    //Two Trees Structurally Identical - Iterative
+    public static boolean isStructurallyIdenticalIterative(BTree bTree1, BTree bTree2) {
+
+        if ((bTree1 == null && bTree2 != null) || (bTree1 != null && bTree2 == null)) {
+            return false;
+        }
+        Queue<BTree> bTreeQueue1 = new LinkedList<>();
+        Queue<BTree> bTreeQueue2 = new LinkedList<>();
+
+        bTreeQueue1.offer(bTree1);
+        bTreeQueue2.offer(bTree2);
+
+        while (!bTreeQueue1.isEmpty() && !bTreeQueue2.isEmpty()) {
+
+            BTree node1 = bTreeQueue1.poll();
+            BTree node2 = bTreeQueue2.poll();
+
+            if ((node1.getLeft() != null && node2.getLeft() == null) || (node1.getLeft() == null && node2.getLeft() != null)) {
+                return false;
+            }
+            if ((node1.getRight() != null && node2.getRight() == null) || (node1.getRight() == null && node2.getRight() != null)) {
+                return false;
+            }
+            if (node1.getLeft() != null && node2.getLeft() != null) {
+                bTreeQueue1.offer(node1.getLeft());
+                bTreeQueue2.offer(node2.getLeft());
+            }
+            if (node1.getRight() != null && node2.getRight() != null) {
+                bTreeQueue1.offer(node1.getRight());
+                bTreeQueue2.offer(node2.getRight());
+            }
+        }
+        return true;
+    }
+
+    //Maximum width of BTree
+    public static int widthOfBTree(BTree bTree) {
+
+        int diameter = 0;
+        Queue<BTree> bTreeQueue = new LinkedList<>();
+        bTreeQueue.offer(bTree);
+        bTreeQueue.offer(null);
+
+        int count = 0;
+        while (!bTreeQueue.isEmpty()) {
+            BTree node = bTreeQueue.poll();
+            if (node != null) {
+                if (node.getLeft() != null) {
+                    bTreeQueue.offer(node.getLeft());
+                    count++;
+                }
+                if (node.getRight() != null) {
+                    bTreeQueue.offer(node.getRight());
+                    count++;
+                }
+            } else {
+
+                if (count > diameter) {
+                    diameter = count;
+                }
+                count = 0; //Reset Count
+                if (!bTreeQueue.isEmpty()) {
+                    bTreeQueue.offer(null);
+                }
+            }
+        }
+        return diameter;
+    }
+
+    //Diameter of BTree
+    public static int diameterOfBTree(BTree bTree) {
+
+        if (bTree == null) {
+            return 0;
+        }
+
+        int leftSubTreeHeight = heightOfBTreeRecursive(bTree.getLeft());
+        int rightSubTreeHeight = heightOfBTreeRecursive(bTree.getRight());
+
+        int diameterLeftSubTree = diameterOfBTree(bTree.getLeft());
+        int diameterRightSubTree = diameterOfBTree(bTree.getRight());
+
+        //Max of the 3
+        // a) Diameter of left subtree
+        // b) Diameter of right subtree
+        // c) left subtree height + right subtree height + 1
+
+        return Math.max((leftSubTreeHeight + rightSubTreeHeight + 1),
+                Math.max(diameterLeftSubTree, diameterRightSubTree));
+
+    }
+
+    //Height of BTree - Recursive
+    public static int heightOfBTreeRecursive(BTree bTree) {
+
+        if (bTree == null) {
+            return 0;
+        }
+
+        int leftSubTreeHeight = heightOfBTreeRecursive(bTree.getLeft());
+        int rightSubTreeHeight = heightOfBTreeRecursive(bTree.getRight());
+
+        return Math.max(leftSubTreeHeight, rightSubTreeHeight) + 1;
+    }
+
+    //Level with maximum Sum
+    public static int levelWithMaximumSum(BTree bTree) {
+
+        int level = 0;
+        int currentLevel = 0;
+        int sum = Integer.MIN_VALUE;
+        int levelSum = Integer.MIN_VALUE;
+        Queue<BTree> bTreeQueue = new LinkedList<>();
+        bTreeQueue.offer(bTree);
+        bTreeQueue.offer(null);
+
+        while (!bTreeQueue.isEmpty()) {
+
+            BTree node = bTreeQueue.poll();
+
+            if (node != null) {
+                levelSum += node.getData();
+                if (node.getLeft() != null) {
+                    bTreeQueue.offer(node.getLeft());
+                }
+                if (node.getRight() != null) {
+                    bTreeQueue.offer(node.getRight());
+                }
+            } else {
+                currentLevel++;
+                if (levelSum > sum) {
+                    sum = levelSum;
+                    level = currentLevel;
+                }
+                levelSum = 0;
+                if (!bTreeQueue.isEmpty()) {
+                    bTreeQueue.offer(null);
+                }
+            }
+        }
+        return level;
+    }
+
+    //Print root to leaf paths
+    public static void printLeafToRootPaths(BTree bTree) {
+
+        int[] path = new int[1000]; //All Paths
+        printLeafToRootPathsRecursive(bTree, path, 0);
+    }
+
+    private static void printLeafToRootPathsRecursive(BTree bTree, int[] path, int pathLen) {
+
+        if (bTree == null) {
+            return;
+        }
+
+        path[pathLen] = bTree.getData();
+        pathLen++;
+
+        if (bTree.getLeft() == null && bTree.getRight() == null) {
+            printBTreePath(path, pathLen);
+        } else {
+            printLeafToRootPathsRecursive(bTree.getLeft(), path, pathLen);
+            printLeafToRootPathsRecursive(bTree.getRight(), path, pathLen);
+        }
+    }
+
+    private static void printBTreePath(int[] path, int pathlen) {
+        for (int i = 0; i < pathlen; i++) {
+            System.out.print(path[i] + " -- ");
+        }
+        System.out.println();
     }
 
     //Utility - Push Node and all its Left Nodes (if exist)
@@ -532,7 +808,7 @@ public class TreeOperations {
 
     public static void treeOperations(BTree bTree) {
 
-        TreeOperations.insertElementBTree(bTree, 25);
+//        TreeOperations.insertElementBTree(bTree, 25);
         System.out.println("Pre Order Traversals");
         TreeOperations.preOrderRecursive(bTree);
         System.out.println();
@@ -574,6 +850,24 @@ public class TreeOperations {
         System.out.println("Height of BTree Iterative " + TreeOperations.heightOfBTreeIterative(bTree));
 
         System.out.println("Minimum Height of BTree " + TreeOperations.minimumHeightBTree(bTree));
+        System.out.println("Deepest Node of BTree " + TreeOperations.deepestNodeOfbTree(bTree).getData());
+        System.out.println("Number Of leaf Nodes of BTree " + TreeOperations.numberOfLeafNodes(bTree));
+        System.out.println("Number Of Full Nodes of BTree " + TreeOperations.numberOfFullNodesInBTree(bTree));
+        System.out.println("Number Of Half Nodes of BTree " + TreeOperations.numberOfHalfNodesInBTree(bTree));
+        System.out.println("Is Structurally identical to itself Recursive " + TreeOperations.isStructurallyIdenticalRecursive(bTree, bTree));
+        BTree sample = new BTree(1);
+        BTree sample2 = new BTree(2);
+        sample.setLeft(sample2);
+        System.out.println("Is Structurally identical to Other Tree Recursive " + TreeOperations.isStructurallyIdenticalRecursive(bTree, sample));
+
+        System.out.println("Is Structurally identical to itself Iterative " + TreeOperations.isStructurallyIdenticalIterative(bTree, bTree));
+        System.out.println("Is Structurally identical to Other Tree Iterative " + TreeOperations.isStructurallyIdenticalIterative(bTree, sample));
+        System.out.println("Width of Tree " + TreeOperations.widthOfBTree(bTree));
+        System.out.println("Diameter of Tree " + TreeOperations.diameterOfBTree(bTree));
+        System.out.println("Level with Maximum sum of Tree " + TreeOperations.levelWithMaximumSum(bTree));
+        System.out.println("Paths from Root -> ");
+        TreeOperations.printLeafToRootPaths(bTree);
+
     }
 
     public static class BTree {
