@@ -40,7 +40,10 @@ public class TreeOperations {
     //** Diameter of BTree
     //Level with maximum Sum
     //*** Print root to leaf paths
-    //*** Existence of path from root to any node
+    //*** Existence of path from root to any node with a Sum
+    //Sum of all elements in bTree - Recursion
+    //Sum of all elements in bTree - Iterative - use level order traversal
+    //Construct a Mirror of the Tree (Left Nodes become Right and Right Becomes left)
 
 
     public static void preOrderRecursive(BTree bTree) {
@@ -708,6 +711,59 @@ public class TreeOperations {
         System.out.println();
     }
 
+    //*** Existence of path from root to any node with a Sum
+    public static boolean isSumExistsInAPath(BTree bTree, int sum) {
+
+        if (sum == 0) {
+            return true;
+        }
+        if (sum < 0 || bTree == null) {
+            return false;
+        }
+        if (sum == bTree.getData()) {
+            return true;
+        }
+
+        boolean isSumExistsLeftTree = isSumExistsInAPath(bTree.getLeft(), sum - bTree.getData());
+        boolean isSumExistsRightTree = isSumExistsInAPath(bTree.getRight(), sum - bTree.getData());
+
+        return isSumExistsLeftTree || isSumExistsRightTree;
+    }
+
+    //Sum of all elements in bTree - Iterative
+    public static int sumOfAllElements(BTree bTree) {
+
+        if (bTree == null) {
+            return 0;
+        }
+
+        return bTree.getData() + sumOfAllElements(bTree.getLeft()) + sumOfAllElements(bTree.getRight());
+    }
+
+    //Construct a Mirror of the Tree
+    private static BTree mirrorOfBTree(BTree bTree) {
+
+        Queue<BTree> bTreeQueue = new LinkedList<>();
+        bTreeQueue.offer(bTree);
+        while (!bTreeQueue.isEmpty()) {
+            BTree node = bTreeQueue.poll();
+
+            BTree tmp = node.getLeft();
+            node.setLeft(node.getRight());
+            node.setRight(tmp);
+
+            if (node.getLeft() != null) {
+                bTreeQueue.offer(bTree.getLeft());
+            }
+
+            if (node.getRight() != null) {
+                bTreeQueue.offer(bTree.getRight());
+            }
+        }
+        return bTree;
+    }
+
+
     //Utility - Push Node and all its Left Nodes (if exist)
     public static void pushCurrentNodeAndAllLeftNodes(BTree bTree, Stack<BTree> bTreeStack) {
 
@@ -867,6 +923,12 @@ public class TreeOperations {
         System.out.println("Level with Maximum sum of Tree " + TreeOperations.levelWithMaximumSum(bTree));
         System.out.println("Paths from Root -> ");
         TreeOperations.printLeafToRootPaths(bTree);
+        //Should Exist in simple and complex
+        System.out.println("Is Sum Exists in Path " + TreeOperations.isSumExistsInAPath(bTree, 10));
+        System.out.println("Sum of All Elements " + TreeOperations.sumOfAllElements(bTree));
+        System.out.println("Mirror of the Tree ");
+        TreeOperations.levelOrderTraversal(mirrorOfBTree(bTree));
+
 
     }
 
