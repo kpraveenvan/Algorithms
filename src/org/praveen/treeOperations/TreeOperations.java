@@ -44,6 +44,7 @@ public class TreeOperations {
     //Sum of all elements in bTree - Recursion
     //Sum of all elements in bTree - Iterative - use level order traversal
     //Construct a Mirror of the Tree (Left Nodes become Right and Right Becomes left)
+    //Check if two trees a Mirror of the each other
 
 
     public static void preOrderRecursive(BTree bTree) {
@@ -743,25 +744,32 @@ public class TreeOperations {
     //Construct a Mirror of the Tree
     private static BTree mirrorOfBTree(BTree bTree) {
 
-        Queue<BTree> bTreeQueue = new LinkedList<>();
-        bTreeQueue.offer(bTree);
-        while (!bTreeQueue.isEmpty()) {
-            BTree node = bTreeQueue.poll();
+        if (bTree != null) {
+            mirrorOfBTree(bTree.getLeft());
+            mirrorOfBTree(bTree.getRight());
 
-            BTree tmp = node.getLeft();
-            node.setLeft(node.getRight());
-            node.setRight(tmp);
-
-            if (node.getLeft() != null) {
-                bTreeQueue.offer(bTree.getLeft());
-            }
-
-            if (node.getRight() != null) {
-                bTreeQueue.offer(bTree.getRight());
-            }
+            BTree tmp = bTree.getLeft();
+            bTree.setLeft(bTree.getRight());
+            bTree.setRight(tmp);
         }
         return bTree;
     }
+
+    //Check if two trees a Mirror of the each other
+    public static boolean twoTreesMirrorOfEachOther(BTree bTree1, BTree bTree2) {
+
+        if (bTree1 == null && bTree2 == null) {
+            return true;
+        }
+        if (bTree1 == null || bTree2 == null) { //Only one null
+            return false;
+        } else {
+            boolean isLeftSubTreeSame = twoTreesMirrorOfEachOther(bTree1.getLeft(), bTree2.getRight());
+            boolean isRightSubTreeSame = twoTreesMirrorOfEachOther(bTree1.getRight(), bTree2.getLeft());
+            return isLeftSubTreeSame && isRightSubTreeSame && bTree1.getData() == bTree2.getData();
+        }
+    }
+
 
 
     //Utility - Push Node and all its Left Nodes (if exist)
@@ -911,13 +919,13 @@ public class TreeOperations {
         System.out.println("Number Of Full Nodes of BTree " + TreeOperations.numberOfFullNodesInBTree(bTree));
         System.out.println("Number Of Half Nodes of BTree " + TreeOperations.numberOfHalfNodesInBTree(bTree));
         System.out.println("Is Structurally identical to itself Recursive " + TreeOperations.isStructurallyIdenticalRecursive(bTree, bTree));
-        BTree sample = new BTree(1);
-        BTree sample2 = new BTree(2);
-        sample.setLeft(sample2);
-        System.out.println("Is Structurally identical to Other Tree Recursive " + TreeOperations.isStructurallyIdenticalRecursive(bTree, sample));
+        BTree node1 = new BTree(1);
+        BTree node2 = new BTree(2);
+        node1.setLeft(node2);
+        System.out.println("Is Structurally identical to Other Tree Recursive " + TreeOperations.isStructurallyIdenticalRecursive(bTree, node1));
 
         System.out.println("Is Structurally identical to itself Iterative " + TreeOperations.isStructurallyIdenticalIterative(bTree, bTree));
-        System.out.println("Is Structurally identical to Other Tree Iterative " + TreeOperations.isStructurallyIdenticalIterative(bTree, sample));
+        System.out.println("Is Structurally identical to Other Tree Iterative " + TreeOperations.isStructurallyIdenticalIterative(bTree, node1));
         System.out.println("Width of Tree " + TreeOperations.widthOfBTree(bTree));
         System.out.println("Diameter of Tree " + TreeOperations.diameterOfBTree(bTree));
         System.out.println("Level with Maximum sum of Tree " + TreeOperations.levelWithMaximumSum(bTree));
@@ -928,8 +936,15 @@ public class TreeOperations {
         System.out.println("Sum of All Elements " + TreeOperations.sumOfAllElements(bTree));
         System.out.println("Mirror of the Tree ");
         TreeOperations.levelOrderTraversal(mirrorOfBTree(bTree));
+        System.out.println();
 
+        BTree node3 = new BTree(1);
+        BTree node4 = new BTree(2);
+        node3.setRight(node4);
 
+        System.out.println("Is two BTrees Mirrors of each other - Should be true " + TreeOperations.twoTreesMirrorOfEachOther(node1, node3));
+        System.out.println("Is two BTrees Mirrors of each other - Should be true " + TreeOperations.twoTreesMirrorOfEachOther(bTree, mirrorOfBTree(bTree)));
+        System.out.println("Is two BTrees Mirrors of each other - Should be false " + TreeOperations.twoTreesMirrorOfEachOther(bTree, node1));
     }
 
     public static class BTree {
